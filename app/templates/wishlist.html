@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="wishlist-container">
+    <h2>My Wishlist</h2>
+    <div class="wishlist-items">
+        {% if wishlist_items %}
+            {% for item in wishlist_items %}
+            <div class="wishlist-item" id="wishlist-{{ item.id }}">
+                <div class="property-image">
+                    <img src="{{ url_for('static', filename='property_images/' + item.auction.image) }}" alt="{{ item.auction.title }}">
+                </div>
+                <div class="property-details">
+                    <h3>{{ item.auction.title }}</h3>
+                    <p>{{ item.auction.description[:200] }}...</p>
+                    <div class="price-info">
+                        <span>Current Bid: ${{ item.auction.current_bid }}</span>
+                        <span>Starting Price: ${{ item.auction.starting_bid }}</span>
+                    </div>
+                    <div class="timer" id="timer-{{ item.auction.id }}">
+                        <!-- Timer will be updated via JavaScript -->
+                    </div>
+                    <div class="actions">
+                        <button onclick="viewAuction({{ item.auction.id }})" class="btn btn-primary">View Auction</button>
+                        <button onclick="removeFromWishlist({{ item.id }})" class="btn btn-danger">Remove</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-items">Your wishlist is empty.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

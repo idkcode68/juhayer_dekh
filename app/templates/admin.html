@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin Panel</h2>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Starting Bid</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for auction in auctions %}
+        <tr>
+            <td>{{ auction.title }}</td>
+            <td>{{ auction.description }}</td>
+            <td>${{ auction.starting_bid }}</td>
+            <td>
+                <button class="btn btn-success" onclick="approveAuction({{ auction.id }})">Approve</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+function approveAuction(auctionId) {
+    fetch(`/admin/approve-auction/${auctionId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Auction approved successfully!');
+            location.reload();
+        } else {
+            alert('Failed to approve auction: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while approving the auction.');
+    });
+}
+</script>
+{% endblock %}

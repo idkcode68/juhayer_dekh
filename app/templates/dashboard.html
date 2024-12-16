@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Auction Dashboard (User Section) -->
+    <div class="auction-dashboard">
+        <div class="dashboard-header">
+            <h1>Auction Dashboard</h1>
+            <div class="dashboard-filters">
+                <select id="category-filter">
+                    <option value="">All Categories</option>
+                    <option value="residential">Residential</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="industrial">Industrial</option>
+                </select>
+                <input type="text" id="search-input" placeholder="Search properties...">
+            </div>
+        </div>
+
+        <div class="active-auctions">
+            <h2>Active Auctions</h2>
+            <div class="auction-grid">
+                {% for auction in auctions %}
+                <div class="auction-card" data-category="{{ auction.category }}">
+                    <img src="{{ auction.image_url }}" alt="{{ auction.title }}">
+                    <div class="auction-details">
+                        <h3>{{ auction.title }}</h3>
+                        <p>{{ auction.description }}</p>
+                        <div class="bid-info">
+                            <span>Current Bid: ${{ auction.current_bid }}</span>
+                            <div class="timer" id="timer-{{ auction.id }}">
+                                Loading...
+                            </div>
+                        </div>
+                        <div class="auction-actions">
+                            <input type="number" id="bid-amount-{{ auction.id }}" 
+                                   min="{{ auction.current_bid + auction.minimum_increment }}" 
+                                   step="0.01">
+                            <button onclick="placeBid({{ auction.id }})" class="btn btn-primary">
+                                Place Bid
+                            </button>
+                            <button onclick="toggleWishlist({{ auction.id }})" 
+                                    class="btn btn-secondary wishlist-btn" 
+                                    id="wishlist-{{ auction.id }}">
+                                ❤
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Section -->
+    <div class="admin-dashboard">
+        <h2>Admin Dashboard</h2>
+
+        <div class="admin-stats">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <p>{{ stats.total_users }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Active Auctions</h3>
+                <p>{{ stats.active_auctions }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Approvals</h3>
+                <p>{{ stats.pending_approvals }}</p>
+            </div>
+        </div>
+
+        <div class="admin-actions">
+            <h3>Pending Listings</h3>
+            <div class="pending-listings">
+                {% for listing in pending_listings %}
+                <div class="listing-card">
+                    <h4>{{ listing.title }}</h4>
+                    <p>{{ listing.description[:100] }}...</p>
+                    <p>Seller: {{ listing.seller.username }}</p>
+                    <div class="action-buttons">
+                        <button onclick="approveListing({{ listing.id }})" class="btn btn-success">Approve</button>
+                        <button onclick="rejectListing({{ listing.id }})" class="btn btn-danger">Reject</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Auction Timers
+        {% for auction in auctions %}
+            updateTimer('{{ auction.end_time }}', 'timer-{{ auction.id }}');
+        {% endfor %}
+
+        // Initialize WebSocket for Real-time Updates
+        initializeWebSocket();
+
+        // Initialize Search Functionality
+        initializeSearch();
+    });
+</script>
+{% endblock %}

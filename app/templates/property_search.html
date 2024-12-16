@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="search-container">
+    <form id="property-search" class="search-form">
+        <div class="search-filters">
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" placeholder="Enter location">
+            </div>
+            
+            <div class="form-group">
+                <label for="price-range">Price Range</label>
+                <div class="price-inputs">
+                    <input type="number" id="min-price" name="min_price" placeholder="Min">
+                    <input type="number" id="max-price" name="max_price" placeholder="Max">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="property-type">Property Type</label>
+                <select id="property-type" name="property_type">
+                    <option value="">All Types</option>
+                    <option value="residential">Residential</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="industrial">Industrial</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+    
+    <div id="search-results" class="search-results">
+        <!-- Results will be dynamically populated here -->
+    </div>
+</div>
+{% endblock %}

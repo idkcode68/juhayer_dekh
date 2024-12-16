@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-panel">
+    <h2>Admin Dashboard</h2>
+    
+    <div class="admin-sections">
+        <!-- Pending Approvals Section -->
+        <div class="section pending-approvals">
+            <h3>Pending Approvals</h3>
+            <div class="approval-list">
+                {% for listing in pending_listings %}
+                <div class="approval-item" id="listing-{{ listing.id }}">
+                    <div class="listing-details">
+                        <h4>{{ listing.title }}</h4>
+                        <p>Seller: {{ listing.seller.username }}</p>
+                        <p>Listed: {{ listing.created_at.strftime('%Y-%m-%d') }}</p>
+                        <div class="approval-actions">
+                            <button onclick="approveListing({{ listing.id }})" class="btn btn-success">Approve</button>
+                            <button onclick="rejectListing({{ listing.id }})" class="btn btn-danger">Reject</button>
+                            <button onclick="viewDetails({{ listing.id }})" class="btn btn-info">View Details</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div class="section user-management">
+            <h3>User Management</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.status }}</td>
+                        <td>
+                            <button onclick="toggleUserStatus({{ user.id }})" class="btn btn-warning">Toggle Status</button>
+                            <button onclick="deleteUser({{ user.id }})" class="btn btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

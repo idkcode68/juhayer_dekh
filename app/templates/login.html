@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+    <h1>Login</h1>
+    <form method="POST" action="" class="auth-form">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(class="form-control") }}
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(class="form-control") }}
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-check">
+            {{ form.remember(class="form-check-input") }}
+            {{ form.remember.label }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+    <div class="auth-links">
+        <a href="{{ url_for('reset_password_request') }}">Forgot Password?</a><br>
+        Need an account? <a href="{{ url_for('register') }}">Register here</a>
+    </div>
+</div>
+{% endblock %}
